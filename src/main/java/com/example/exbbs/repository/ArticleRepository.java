@@ -60,12 +60,14 @@ public class ArticleRepository {
 				article.setCommentList(commentList);
 				articleList.add(article);
 			}
-			Comment comment = new Comment();
-			comment.setId(rs.getInt("c_id"));
-			comment.setName(rs.getString("c_name"));
-			comment.setContent(rs.getString("c_content"));
-			comment.setArticleId(rs.getInt("c_article_id"));
-			commentList.add(comment);
+			if (rs.getInt("c_id") != 0) {
+				Comment comment = new Comment();
+				comment.setId(rs.getInt("c_id"));
+				comment.setName(rs.getString("c_name"));
+				comment.setContent(rs.getString("c_content"));
+				comment.setArticleId(rs.getInt("c_article_id"));
+				commentList.add(comment);
+			}
 			preId = id;
 		}
 		return articleList;

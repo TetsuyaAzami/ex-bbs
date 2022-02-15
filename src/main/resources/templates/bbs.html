@@ -16,7 +16,7 @@
   <body>
     <!-- Article投稿部分 -->
     <form
-      th:action="@{/article/insert}"
+      th:action="@{/article/insertArticle}"
       method="post"
       th:object="${articleForm}"
     >
@@ -27,7 +27,8 @@
       ><br />
       <button>記事投稿</button>
     </form>
-    <!-- Article全件表示部分 -->
+
+    <!-- 記事全件表示部分 -->
     <div class="article" th:each="article : ${articleList}">
       <hr />
       <span>投稿者名:</span>
@@ -36,17 +37,31 @@
       <span th:text="${article.content}"></span><br />
       <input type="hidden" name="id" th:value="${article.id}" />
       <button>記事削除</button><br />
+
+      <!-- 記事に紐づくコメント全件表示 -->
       <div class="comments" th:each="comment:${article.commentList}">
-        <span>コメント者名: </span><span th:text="${comment.name}"></span><br />
-        <span>コメント内容:</span><br />
-        <span th:text="${comment.content}"></span><br />
+        <div th:unless="${#lists.isEmpty(article.commentList)}">
+          <span>コメント者名: </span><span th:text="${comment.name}"></span
+          ><br />
+          <span>コメント内容:</span><br />
+          <span th:text="${comment.content}"></span><br />
+        </div>
       </div>
-      <div class="commentForm" th:object="${commentForm}">
+
+      <!-- コメントフォーム -->
+      <form
+        class="commentForm"
+        th:action="@{/article/insertComment}"
+        method="post"
+        th:object="${commentForm}"
+      >
         <label for="name">名前:</label><br />
         <input type="text" th:field="*{name}" /><br />
         <label for="content">コメント</label><br />
         <textarea type="text" th:field="*{content}" />
-      </div>
+        <input type="hidden" name="articleId" th:value="${article.id}" /><br />
+        <button>コメント投稿</button>
+      </form>
     </div>
   </body>
 </html>
