@@ -5,9 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .comments,
+      .article,
+      .commentForm {
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
-    <label for="comment">投稿者名:</label><br />
-    <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+    <!-- Article投稿部分 -->
+    <form
+      th:action="@{/article/insert}"
+      method="post"
+      th:object="${articleForm}"
+    >
+      <label for="name">投稿者名:</label
+      ><input type="text" th:field="*{name}" /><br />
+      <label for="content">投稿内容:</label>
+      <textarea name="content" id="content" cols="30" rows="10"></textarea
+      ><br />
+      <button>記事投稿</button>
+    </form>
+    <!-- Article全件表示部分 -->
+    <div class="article" th:each="article : ${articleList}">
+      <hr />
+      <span>投稿者名:</span>
+      <span th:text="${article.name}"></span><br />
+      <span>投稿内容:</span><br />
+      <span th:text="${article.content}"></span><br />
+      <input type="hidden" name="id" th:value="${article.id}" />
+      <button>記事削除</button><br />
+      <div class="comments" th:each="comment:${article.commentList}">
+        <span>コメント者名: </span><span th:text="${comment.name}"></span><br />
+        <span>コメント内容:</span><br />
+        <span th:text="${comment.content}"></span><br />
+      </div>
+      <div class="commentForm" th:object="${commentForm}">
+        <label for="name">名前:</label><br />
+        <input type="text" th:field="*{name}" /><br />
+        <label for="content">コメント</label><br />
+        <textarea type="text" th:field="*{content}" />
+      </div>
+    </div>
   </body>
 </html>
