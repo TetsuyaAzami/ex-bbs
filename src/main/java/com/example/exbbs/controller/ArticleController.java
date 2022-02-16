@@ -11,6 +11,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -44,7 +46,6 @@ public class ArticleController {
 	public String index(Model model) {
 		List<Article> articleList = articleService.findAll();
 		model.addAttribute("articleList", articleList);
-		articleList.forEach(article -> System.out.println(article));
 		return "bbs";
 	}
 
@@ -56,10 +57,11 @@ public class ArticleController {
 	 * @return 記事一覧ページ
 	 */
 	@RequestMapping("/insertArticle")
-	public String insert(ArticleForm articleForm, Model model) {
+	public String insert(@Validated ArticleForm articleForm, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return index(model);
+		}
 		Article article = new Article();
-		System.out.println(articleForm.getName());
-		System.out.println(articleForm.getContent());
 		BeanUtils.copyProperties(articleForm, article);
 		articleService.insert(article);
 		return "redirect:/article";
@@ -73,12 +75,44 @@ public class ArticleController {
 	 * @return 記事一覧ページ
 	 */
 	@RequestMapping("/insertComment")
-	public String insert(CommentForm commentForm, Model model) {
+	public String insert(@Validated CommentForm commentForm, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			Integer ErrorCommentAriticleId = Integer.parseInt(commentForm.getArticleId());
+			model.addAttribute("ErrorCommentAriticleId", ErrorCommentAriticleId);
+			return index(model);
+		}
 		Comment comment = new Comment();
 		BeanUtils.copyProperties(commentForm, comment);
 		comment.setArticleId(Integer.parseInt(commentForm.getArticleId()));
 		commentService.insert(comment);
 		commentForm = new CommentForm();
+		return "redirect:/article";
+	}
+
+	// /**
+	// * 記事とそれに紐づくコメント削除
+	// *
+	// * @param articleId 記事ID
+	// * @return 記事一覧ページ
+	// */
+	// @Transactional
+	// @RequestMapping("/delete")
+	// public String delete(Integer articleId) {
+	// // 外部キー制約があるため、コメントを削除してから記事を削除
+	// commentService.deleteByArticleId(articleId);
+	// articleService.deleteById(articleId);
+	// return "redirect:/article";
+	// }
+
+	/**
+	 * 記事とそれに紐づくコメント削除
+	 *
+	 * @param articleId 記事ID
+	 * @return 記事一覧ページ
+	 */
+	@RequestMapping("/delete")
+	public String deleteAll(Integer articleId) {
+		articleService.deleteAll(articleId);
 		return "redirect:/article";
 	}
 }

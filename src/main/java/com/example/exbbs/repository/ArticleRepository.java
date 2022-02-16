@@ -32,8 +32,9 @@ public class ArticleRepository {
 	// article.setId(rs.getInt("a_id"));
 	// article.setName(rs.getString("a_name"));
 	// article.setContent(rs.getString("a_content"));
-	// article.setCommentList(commentList);
+	// article.setCommentList(commentList);z
 	// articleList.add(article);
+	// preId = rs.getInt("a_id");
 	// }
 	// Comment comment = new Comment();
 	// comment.setId(rs.getInt("c_id"));
@@ -41,7 +42,7 @@ public class ArticleRepository {
 	// comment.setContent(rs.getString("c_content"));
 	// comment.setArticleId(rs.getInt("c_article_id"));
 	// commentList.add(comment);
-	// preId = rs.getInt("a_id");
+	//
 	// return article;
 	// };
 
@@ -106,7 +107,18 @@ public class ArticleRepository {
 		template.update(sql, param);
 	}
 
-	public void deleteById(int id) {
-		// String sql = "DELETE FROM articles WHERE id = 1;";
+	// public void deleteById(Integer articleId) {
+	// String sql = "DELETE FROM articles WHERE id = :id;";
+	// SqlParameterSource param = new MapSqlParameterSource().addValue("id", articleId);
+	// template.update(sql, param);
+	// }
+
+	public void deleteAll(Integer articleId) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("WITH delete_articles AS(DELETE FROM articles WHERE id = :articleId)  ");
+		sql.append("DELETE FROM comments WHERE article_id = :articleId;");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("articleId", articleId);
+		template.update(sql.toString(), param);
 	}
+
 }

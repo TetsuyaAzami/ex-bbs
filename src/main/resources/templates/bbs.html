@@ -11,6 +11,9 @@
       .commentForm {
         margin-top: 20px;
       }
+      .error-messages {
+        color: red;
+      }
     </style>
   </head>
   <body>
@@ -20,8 +23,14 @@
       method="post"
       th:object="${articleForm}"
     >
+      <label for="name" class="error-messages" th:errors="*{name}"
+        >記事名エラーメッセージ</label
+      ><br />
       <label for="name">投稿者名:</label
       ><input type="text" th:field="*{name}" /><br />
+      <label for="content" class="error-messages" th:errors="*{content}"
+        >記事内容エラーメッセージ</label
+      ><br />
       <label for="content">投稿内容:</label>
       <textarea name="content" id="content" cols="30" rows="10"></textarea
       ><br />
@@ -36,7 +45,9 @@
       <span>投稿内容:</span><br />
       <span th:text="${article.content}"></span><br />
       <input type="hidden" name="id" th:value="${article.id}" />
-      <button>記事削除</button><br />
+      <a th:href="@{'/article/delete?articleId=' + ${article.id} }">
+        <button>記事削除</button><br />
+      </a>
 
       <!-- 記事に紐づくコメント全件表示 -->
       <div class="comments" th:each="comment:${article.commentList}">
@@ -55,8 +66,22 @@
         method="post"
         th:object="${commentForm}"
       >
+        <label
+          for="name"
+          class="error-messages"
+          th:if="${ErrorCommentAriticleId == article.id}"
+          th:errors="*{name}"
+          >コメント投稿者エラーメッセージ</label
+        ><br />
         <label for="name">名前:</label><br />
         <input type="text" th:field="*{name}" /><br />
+        <label
+          for="content"
+          class="error-messages"
+          th:if="${ErrorCommentAriticleId == article.id}"
+          th:errors="*{content}"
+          >コメント投稿内容エラーメッセージ</label
+        ><br />
         <label for="content">コメント</label><br />
         <textarea type="text" th:field="*{content}" />
         <input type="hidden" name="articleId" th:value="${article.id}" /><br />

@@ -3,6 +3,7 @@ package com.example.exbbs.repository;
 import com.example.exbbs.domain.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -28,7 +29,9 @@ public class CommentRepository {
 		template.update(sql, param);
 	}
 
-	public void deleteByArticleId(int id) {
-		// String sql = "DELETE FROM articles WHERE id = 1;";
+	public void deleteByArticleId(Integer articleId) {
+		String sql = "DELETE FROM comments WHERE article_id = :id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", articleId);
+		template.update(sql, param);
 	}
 }
