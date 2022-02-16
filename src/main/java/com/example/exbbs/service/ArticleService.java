@@ -20,7 +20,11 @@ public class ArticleService {
 		repository.insert(article);
 	}
 
-	public void deleteById(int id) {
-		repository.deleteById(id);
+	// public void deleteById(Integer articleId) {
+	// repository.deleteById(articleId);
+	// }
+
+	public void deleteAll(Integer articleId) {
+		repository.deleteAll(articleId);
 	}
 }
