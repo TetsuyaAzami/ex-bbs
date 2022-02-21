@@ -5,9 +5,99 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .comments,
+      .article,
+      .commentForm {
+        margin-top: 20px;
+      }
+      .error-messages {
+        color: red;
+      }
+      * {
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
-    <label for="comment">投稿者名:</label><br />
-    <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+    <!-- Article投稿部分 -->
+    <form
+      th:action="@{/article/insertArticle}"
+      method="post"
+      th:object="${articleForm}"
+    >
+      <label for="name" class="error-messages" th:errors="*{name}"
+        >記事名エラーメッセージ</label
+      ><br />
+      <label for="name">投稿者名:</label
+      ><input type="text" th:field="*{name}" /><br />
+      <label for="content" class="error-messages" th:errors="*{content}"
+        >記事内容エラーメッセージ</label
+      ><br />
+      <label for="content">投稿内容:</label>
+      <textarea name="content" id="content" cols="30" rows="10"></textarea
+      ><br />
+      <button>記事投稿</button>
+    </form>
+
+    <!-- 記事全件表示部分 -->
+    <div class="article" th:each="article : ${articleList}">
+      <hr />
+      <span>投稿者名:</span>
+      <span th:text="${article.name}"></span><br />
+      <span>投稿内容:</span><br />
+      <span th:text="${article.content}"></span><br />
+      <input type="hidden" name="id" th:value="${article.id}" />
+      <a th:href="@{'/article/delete?articleId=' + ${article.id} }">
+        <button>記事削除</button>
+      </a>
+      <!-- <button id="likePlusButton">👍</button>
+      <span th:id="${'likecount' + article.id}">0</span> -->
+
+      <!-- 記事に紐づくコメント全件表示 -->
+      <div class="comments" th:each="comment:${article.commentList}">
+        <div th:unless="${#lists.isEmpty(article.commentList)}">
+          <span>コメント者名: </span><span th:text="${comment.name}"></span
+          ><br />
+          <span>コメント内容:</span><br />
+          <span th:text="${comment.content}"></span><br />
+        </div>
+      </div>
+
+      <!-- コメントフォーム -->
+      <form
+        class="commentForm"
+        th:action="@{/article/insertComment}"
+        method="post"
+        th:object="${commentForm}"
+      >
+        <label
+          for="name"
+          class="error-messages"
+          th:if="${ErrorCommentAriticleId == article.id}"
+          th:errors="*{name}"
+          >コメント投稿者エラーメッセージ</label
+        ><br />
+        <label for="name">名前:</label><br />
+        <input type="text" th:field="*{name}" /><br />
+        <label
+          for="content"
+          class="error-messages"
+          th:if="${ErrorCommentAriticleId == article.id}"
+          th:errors="*{content}"
+          >コメント投稿内容エラーメッセージ</label
+        ><br />
+        <label for="content">コメント</label><br />
+        <textarea type="text" th:field="*{content}" />
+        <input type="hidden" name="articleId" th:value="${article.id}" /><br />
+        <button>コメント投稿</button>
+      </form>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script th:src="@{/js/bbs.js}"></script>
   </body>
 </html>

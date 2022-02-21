@@ -4,3 +4,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/student
     username: postgres
     password: postgres
+  messages:
+    basename: ValidationMessages
+  sql:
+    init:
+      mode: always
+server:
+  port: 8081
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
