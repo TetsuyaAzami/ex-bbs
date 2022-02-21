@@ -14,7 +14,7 @@ public class CommentService {
 		repository.insert(comment);
 	}
 
-	public void deleteByArticleId(Integer articleId) {
-		repository.deleteByArticleId(articleId);
-	}
+	// public void deleteByArticleId(Integer articleId) {
+	// repository.deleteByArticleId(articleId);
+	// }
 }

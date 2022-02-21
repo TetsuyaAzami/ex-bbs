@@ -45,6 +45,7 @@ public class ArticleController {
 	@RequestMapping("")
 	public String index(Model model) {
 		List<Article> articleList = articleService.findAll();
+		articleList.forEach(article -> System.out.println(article));
 		model.addAttribute("articleList", articleList);
 		return "bbs";
 	}
