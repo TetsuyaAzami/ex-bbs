@@ -55,7 +55,7 @@ public class ArticleController {
 	 *
 	 * @param articleForm 記事フォーム情報
 	 * @param model リクエストスコープ
-	 * @return 記事一覧ページ
+	 * @return 記事一覧ページ－
 	 */
 	@RequestMapping("/insertArticle")
 	public String insert(@Validated ArticleForm articleForm, BindingResult result, Model model) {

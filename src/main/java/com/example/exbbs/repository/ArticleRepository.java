@@ -106,7 +106,7 @@ public interface ArticleRepository {
 			@Result(column = "content", property = "content"),
 			@Result(column = "id", property = "commentList", many = @Many(
 					select = "com.example.exbbs.repository.CommentRepository.selectComments"))})
-	@Select("SELECT id,name,content FROM articles ORDER BY id DESC")
+	@Select("SELECT id,name,content FROM articles ORDER BY id DESC LIMIT 10 OFFSET 0")
 	List<Article> findAll();
 
 	// @Select("SELECT id,name,content,article_id FROM comments WHERE article_id = #{articleId};")
