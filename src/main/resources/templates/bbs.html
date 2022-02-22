@@ -51,8 +51,8 @@
       <a th:href="@{'/article/delete?articleId=' + ${article.id} }">
         <button>記事削除</button>
       </a>
-      <!-- <button id="likePlusButton">👍</button>
-      <span th:id="${'likecount' + article.id}">0</span> -->
+      <button class="likeCountButton" th:id="*{article.id}">👍</button>
+      <span th:id="*{'likeCount' + article.id}">0</span>
 
       <!-- 記事に紐づくコメント全件表示 -->
       <div class="comments" th:each="comment:${article.commentList}">
